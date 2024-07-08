@@ -1,9 +1,11 @@
 import streamlit as st
+from streamlit_extras import add_vertical_space as avs
 import google.generativeai as genai
 import os
 import PyPDF2 as pdf
 from dotenv import load_dotenv
 import json
+from PIL import Image
 
 load_dotenv() ## load all our environment variables
 
