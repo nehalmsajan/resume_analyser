@@ -16,6 +16,7 @@ def get_gemini_response(input):
     response = model.generate_content(input)
     return response.text
 
+#Convert PDF content to Text format
 def input_pdf_text(uploaded_file):
     reader = pdf.PdfReader(uploaded_file)
     text = ""
@@ -24,17 +25,18 @@ def input_pdf_text(uploaded_file):
         text += str(page.extract_text())
     return text
 
+
 # Streamlit UI
 st.set_page_config(page_title="Resume ATS Tracker", layout="wide")
 
-# Custom CSS to change the background color to white, text color to black, and add fonts and styling
+
 st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
     .stApp {
-        background-color: white;
+        background-color: #34CD8C;
         color: black;
         font-family: 'Roboto', sans-serif;
     }
@@ -50,11 +52,11 @@ st.markdown(
         margin: auto;
         display: block;
         margin: 12px 12px;
-        border-radius:33px;
+        border-radius: 15px;
     }
     .stButton>button {
-        background-color: #0066cc;
-        color: white !important;
+        background-color: #006400;
+        color: #ffffff !important;
         border: none;
         border-radius: 5px;
         padding: 10px 20px;
@@ -62,7 +64,7 @@ st.markdown(
         cursor: pointer;
     }
     .stButton>button:hover {
-        background-color: #005bb5;
+        background-color: #004d00;
     }
     .header-title {
         text-align: center;
@@ -83,11 +85,12 @@ st.markdown(
         font-weight: 300;
         font-size: 1.2em;
     }
-    .faq {
-        background-color: white !important;
-        font-weight: 300;
-        font-size: 1rem;
-        margin: 9px;
+    .faq-container {
+        background-color: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
     }
     .faq-question {
         font-weight: 400;
@@ -97,6 +100,11 @@ st.markdown(
         font-weight: 300;
         font-size: 1.2em;
         margin-bottom: 10px;
+    }
+    .stTextInput > div, .stTextArea > div {
+        background-color: #d4edda;  /* Light green background */
+        border-radius: 5px;
+        padding: 10px;
     }
     </style>
     """,
@@ -167,25 +175,29 @@ with col1:
             """
             response = get_gemini_response(input_prompt)
             st.subheader(response)
+        else:
+            st.error("Please provide both the job description and upload your resume.")
 with col2:
     img2 = Image.open("images/icon2.png")
     st.image(img2, use_column_width=True, caption="Career Guidance")
 
+
 avs.add_vertical_space(10)
+
 
 col1, col2 = st.columns([2, 3])
 with col2:
     st.markdown("<h1 class='sub-header'>FAQ</h1>", unsafe_allow_html=True)
     st.markdown("""
-                <div  class="faq">
+                <div class="faq-container">
                     <p class='faq-question'>Question: How does CareerCraft analyze resumes and job descriptions?</p>
                     <p class='faq-answer'>Answer: CareerCraft uses advanced algorithms to analyze resumes and job descriptions, identifying key keywords and assessing compatibility between the two.</p>
                 </div>
-                <div class="faq">
+                <div class="faq-container">
                     <p class='faq-question'>Question: Is CareerCraft suitable for both entry-level and experienced professionals?</p>
                     <p class='faq-answer'>Answer: Absolutely! CareerCraft caters to job seekers at all career stages, offering tailored insights and guidance to enhance their resumes and advance their careers.</p>
                 </div>
-                <div class="faq">
+                <div class="faq-container">
                     <p class='faq-question'>Question: Can CareerCraft suggest improvements for my resume?</p>
                     <p class='faq-answer'>Answer: Yes, CareerCraft provides personalized recommendations to optimize your resume for specific job openings, including suggestions for missing keywords and alignment with desired job roles.</p>
                 </div>
@@ -193,3 +205,5 @@ with col2:
 with col1:
     img3 = Image.open("images/icon3.png")
     st.image(img3, use_column_width=True, caption="Advanced Analysis")
+
+avs.add_vertical_space(10)
