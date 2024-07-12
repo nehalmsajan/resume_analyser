@@ -6,24 +6,45 @@ import PyPDF2 as pdf
 from dotenv import load_dotenv
 import json
 from PIL import Image
+import matplotlib.pyplot as plt
 
 load_dotenv()  # Load all our environment variables
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def get_gemini_response(input):
-    model = genai.GenerativeModel('gemini-pro')
-    response = model.generate_content(input)
-    return response.text
+    try:
+        model = genai.GenerativeModel('gemini-pro')
+        response = model.generate_content(input)
+        return response.text
+    except Exception as e:
+        st.error(f"Error generating response: {e}")
+        return None
 
 #Convert PDF content to Text format
 def input_pdf_text(uploaded_file):
-    reader = pdf.PdfReader(uploaded_file)
-    text = ""
-    for page in range(len(reader.pages)):
-        page = reader.pages[page]
-        text += str(page.extract_text())
-    return text
+    try:
+        reader = pdf.PdfReader(uploaded_file)
+        text = ""
+        for page in range(len(reader.pages)):
+            page = reader.pages[page]
+            text += str(page.extract_text())
+        return text
+    except Exception as e:
+        st.error(f"Error reading PDF file: {e}")
+        return None
+
+# Function to create a doughnut chart
+def create_doughnut_chart(percentage):
+    fig, ax = plt.subplots(figsize=(6, 6))
+    sizes = [percentage, 100 - percentage]
+    colors = ['#4CAF50', '#E0E0E0']
+    explode = (0.1, 0)  # explode the 1st slice
+    ax.pie(sizes, colors=colors, startangle=90, explode=explode, wedgeprops=dict(width=0.3))
+    ax.text(0, 0, f'{percentage}%', ha='center', va='center', fontsize=24, fontweight='bold')
+    ax.set_title("Match Percentage", fontsize=16)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    return fig
 
 
 # Streamlit UI
@@ -174,7 +195,20 @@ with col1:
             While generating the response put some space to separate all the three sections.
             """
             response = get_gemini_response(input_prompt)
-            st.subheader(response)
+            if response:
+                st.subheader("Analysis Result")
+                left_col, right_col = st.columns([2, 1])
+                with left_col:
+                    st.markdown(response)
+                match_percentage = 0 
+                try:
+                    match_percentage = int(response.split('\n')[0].split(' ')[-1].strip('%'))
+                except:
+                    st.error("Failed to extract match percentage from the response.")
+            
+                with right_col:
+                    fig = create_doughnut_chart(match_percentage)
+                    st.pyplot(fig)
         else:
             st.error("Please provide both the job description and upload your resume.")
 with col2:
