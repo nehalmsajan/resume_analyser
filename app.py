@@ -39,11 +39,11 @@ def create_doughnut_chart(percentage):
     fig, ax = plt.subplots(figsize=(6, 6))
     sizes = [percentage, 100 - percentage]
     colors = ['#4CAF50', '#E0E0E0']
-    explode = (0.1, 0)  # explode the 1st slice
+    explode = (0.1, 0)  
     ax.pie(sizes, colors=colors, startangle=90, explode=explode, wedgeprops=dict(width=0.3))
     ax.text(0, 0, f'{percentage}%', ha='center', va='center', fontsize=24, fontweight='bold')
     ax.set_title("Match Percentage", fontsize=16)
-    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax.axis('equal')  
     return fig
 
 
