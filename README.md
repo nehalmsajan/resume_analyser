@@ -76,6 +76,9 @@ This project implements a resume analysis tool using Google Generative AI. The a
 5. **View the analysis results** including the match percentage, missing keywords, and profile summary.
 6. **Optimize your resume** based on the provided feedback.
 
+## Deployment Link
+- [Resume Analyzer](https://resume-analyser-q098.onrender.com)
+
 ## Acknowledgements
 
 - [Streamlit](https://streamlit.io/) for providing an easy-to-use web app framework.
